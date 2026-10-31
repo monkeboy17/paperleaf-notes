@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7f7f3">
+  <meta name="description" content="A calm, local-first space for your notes.">
+  <title>Paperleaf — Notes</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <div class="brand-row">
+        <div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M7 23.8C7 14 12.6 7.2 25 5.5c-.8 11.6-6.1 18.4-15.7 19.1"/><path d="M8 25.5c4.1-6.2 8.9-10.3 14.5-13.5"/></svg></div>
+        <div><div class="brand-name">paperleaf</div><div class="brand-caption">a little room for thought</div></div>
+        <button class="icon-button sidebar-close" id="sidebarClose" aria-label="Close menu"><svg><use href="#i-x"/></svg></button>
+      </div>
+
+      <button class="new-note-button" id="newNoteButton"><svg><use href="#i-plus"/></svg><span>New note</span><kbd>⌘ N</kbd></button>
+
+      <div class="nav-group">
+        <div class="nav-label">WORKSPACE</div>
+        <button class="nav-item active" data-view="all"><svg><use href="#i-notes"/></svg><span>All notes</span><span class="nav-count" id="allCount">0</span></button>
+        <button class="nav-item" data-view="favorites"><svg><use href="#i-star"/></svg><span>Favorites</span></button>
+        <button class="nav-item" data-view="archive"><svg><use href="#i-archive"/></svg><span>Archive</span></button>
+        <button class="nav-item" data-view="trash"><svg><use href="#i-trash"/></svg><span>Trash</span></button>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="section-heading"><span class="nav-label">FOLDERS</span><button class="tiny-icon-button" id="addFolderButton" aria-label="Add folder" title="Add folder"><svg><use href="#i-plus"/></svg></button></div>
+        <div id="folderNav" class="folder-nav"><div class="sidebar-hint">Your folders will appear here.</div></div>
+      </div>
+
+      <div class="sidebar-section tags-section">
+        <div class="section-heading"><span class="nav-label">TAGS</span></div>
+        <div id="tagNav" class="tag-nav"><div class="sidebar-hint">Tags make notes easier to find.</div></div>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="privacy-note"><span class="privacy-dot"></span><div><strong>Private by default</strong><small>Your notes stay on this device.</small></div></div>
+        <button class="nav-item utility-item" id="settingsButton"><svg><use href="#i-settings"/></svg><span>Backup & settings</span></button>
+      </div>
+    </aside>
+
+    <div class="sidebar-scrim" id="sidebarScrim"></div>
+
+    <div class="workspace">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="menuButton" aria-label="Open menu"><svg><use href="#i-menu"/></svg></button>
+        <div class="mobile-brand"><span class="brand-mark mini"><svg viewBox="0 0 32 32"><path d="M7 23.8C7 14 12.6 7.2 25 5.5c-.8 11.6-6.1 18.4-15.7 19.1"/><path d="M8 25.5c4.1-6.2 8.9-10.3 14.5-13.5"/></svg></span><span>paperleaf</span></div>
+        <label class="search-box" for="searchInput"><svg><use href="#i-search"/></svg><input id="searchInput" type="search" placeholder="Search your notes…" autocomplete="off"><kbd>⌘ K</kbd><button type="button" class="clear-search" id="clearSearch" aria-label="Clear search"><svg><use href="#i-x"/></svg></button></label>
+        <div class="topbar-actions">
+          <button class="icon-button" id="layoutButton" aria-label="Toggle note layout" title="Toggle layout"><svg><use href="#i-grid"/></svg></button>
+          <button class="icon-button" id="exportButton" aria-label="Export notes" title="Export notes"><svg><use href="#i-download"/></svg></button>
+          <button class="avatar-button" id="themeButton" aria-label="Toggle theme" title="Toggle theme"><svg><use href="#i-moon"/></svg></button>
+        </div>
+      </header>
+
+      <main class="main-layout">
+        <section class="notes-panel" id="notesPanel" aria-label="Notes list">
+          <div class="list-header">
+            <div><div class="eyebrow" id="listEyebrow">YOUR SPACE</div><h1 id="listTitle">All notes</h1><p id="listSubtitle">A clear place for everything on your mind.</p></div>
+            <div class="list-controls"><span class="note-total" id="noteTotal">0 notes</span><select id="sortSelect" aria-label="Sort notes"><option value="updated">Recently edited</option><option value="created">Date created</option><option value="title">Title A–Z</option></select></div>
+          </div>
+          <div class="notes-grid" id="notesList"></div>
+          <div class="empty-list" id="emptyList" hidden>
+            <div class="empty-illustration"><svg viewBox="0 0 120 100"><rect x="23" y="18" width="67" height="72" rx="10"/><path d="M38 39h36M38 51h36M38 63h24"/><path d="M87 12l8 8-25 25-10 2 2-10z"/></svg></div>
+            <h2 id="emptyTitle">A fresh page.</h2><p id="emptyText">Create a note and get that thought out of your head.</p>
+            <button class="primary-button" id="emptyNewNote"><svg><use href="#i-plus"/></svg> Create a note</button>
+          </div>
+        </section>
+
+        <section class="editor-panel" id="editorPanel" aria-label="Note editor">
+          <div class="editor-empty" id="editorEmpty">
+            <div class="empty-mark"><svg viewBox="0 0 80 80"><path d="M19 14h30l13 13v39H19z"/><path d="M49 14v14h13M29 40h23M29 50h23"/><path d="M29 60h14"/></svg></div>
+            <h2>Your thoughts, taking shape.</h2>
+            <p>Choose a note to read or create something new.</p>
+            <button class="primary-button" id="editorNewNote"><svg><use href="#i-plus"/></svg> Start writing</button>
+            <span class="editor-shortcut">A quiet space. No distractions.</span>
+          </div>
+
+          <div class="editor-wrap" id="editorWrap" hidden>
+            <div class="editor-topline">
+              <button class="back-button" id="backToNotes"><svg><use href="#i-arrow-left"/></svg><span>Notes</span></button>
+              <div class="save-indicator" id="saveIndicator"><span class="save-dot"></span><span>Saved on this device</span></div>
+              <div class="editor-actions">
+                <button class="icon-button" id="favoriteButton" title="Add to favorites" aria-label="Add to favorites"><svg><use href="#i-star"/></svg></button>
+                <button class="icon-button" id="pinButton" title="Pin note" aria-label="Pin note"><svg><use href="#i-pin"/></svg></button>
+                <div class="menu-anchor"><button class="icon-button" id="moreButton" title="More actions" aria-label="More actions"><svg><use href="#i-more"/></svg></button><div class="dropdown-menu" id="noteMenu" hidden>
+                  <button data-action="color"><svg><use href="#i-palette"/></svg> Change color</button>
+                  <button data-action="folder"><svg><use href="#i-folder"/></svg> Move to folder</button>
+                  <button data-action="archive"><svg><use href="#i-archive"/></svg> Archive note</button>
+                  <div class="dropdown-divider"></div>
+                  <button class="danger-action" data-action="delete"><svg><use href="#i-trash"/></svg> Move to trash</button>
+                </div></div>
+              </div>
+            </div>
+
+            <div class="editor-scroll">
+              <div class="editor-content-column">
+                <div class="note-context-row"><span class="note-context" id="noteContext">PERSONAL NOTE</span><span class="note-updated" id="noteUpdated"></span></div>
+                <input class="note-title-input" id="noteTitle" type="text" placeholder="Untitled note" maxlength="180" aria-label="Note title">
+                <div class="note-tag-row" id="noteTags"><div class="tag-chips" id="tagChips"></div><input id="tagInput" type="text" placeholder="Add a tag…" aria-label="Add a tag"></div>
+                <div class="format-toolbar" role="toolbar" aria-label="Text formatting">
+                  <button data-command="bold" title="Bold (Ctrl+B)" aria-label="Bold"><strong>B</strong></button>
+                  <button data-command="italic" title="Italic (Ctrl+I)" aria-label="Italic"><em>I</em></button>
+                  <button data-command="underline" title="Underline" aria-label="Underline"><span class="underlined-u">U</span></button>
+                  <span class="toolbar-separator"></span>
+                  <button data-command="formatBlock" data-value="h2" title="Heading" aria-label="Heading"><span class="heading-symbol">H</span></button>
+                  <button data-command="insertUnorderedList" title="Bulleted list" aria-label="Bulleted list"><svg><use href="#i-list"/></svg></button>
+                  <button data-command="insertOrderedList" title="Numbered list" aria-label="Numbered list"><svg><use href="#i-list-ordered"/></svg></button>
+                  <button data-command="checklist" title="Checklist" aria-label="Insert checklist"><svg><use href="#i-check-square"/></svg></button>
+                  <span class="toolbar-spacer"></span>
+                  <button class="preview-button" id="previewButton" title="Preview note"><svg><use href="#i-eye"/></svg><span>Preview</span></button>
+                </div>
+                <div class="content-editable" id="noteContent" contenteditable="true" spellcheck="true" data-placeholder="Start writing… Your ideas are safe here."></div>
+                <div class="preview-content" id="notePreview" hidden></div>
+                <div class="editor-footer"><span>Changes save automatically</span><span id="wordCount">0 words</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="modal" id="appModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header"><div><div class="eyebrow" id="modalEyebrow">PAPERLEAF</div><h2 id="modalTitle">A small change</h2></div><button class="icon-button" id="modalClose" aria-label="Close dialog"><svg><use href="#i-x"/></svg></button></div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer" id="modalFooter"></div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="m18 6-12 12M6 6l12 12"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4 4"/></symbol>
+    <symbol id="i-notes" viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M8.5 8h7M8.5 12h7M8.5 16h4"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.8 5.8 6.4.9-4.6 4.5 1.1 6.4-5.7-3-5.7 3 1.1-6.4-4.6-4.5 6.4-.9z"/></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24"><path d="M4 7h16v13H4zM3 4h18v3H3zM9 11h6"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6.5h7l2 2H21v10.8H3z"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1 1.1 1.8-1.8 3.1-2.1-.5a8 8 0 0 1-1.7 1l-.4 2.1h-3.5l-.4-2.1a8 8 0 0 1-1.7-1l-2.1.5-1.8-3.1 1.1-1.8a8 8 0 0 1 0-2l-1.1-1.8 1.8-3.1 2.1.5a8 8 0 0 1 1.7-1l.4-2.1h3.5l.4 2.1a8 8 0 0 1 1.7 1l2.1-.5 1.8 3.1-1.1 1.8a8 8 0 0 1 0 2z" transform="translate(0 -1) scale(.92)"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="m16 3 5 5-4 1-4 4-1 5-2-2-5 5-1-1 5-5-2-2 5-1 4-4z"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+    <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18h1.2a2 2 0 0 0 1.4-3.4 1.8 1.8 0 0 1 1.3-3.1H18a3 3 0 0 0 3-3c0-4.7-4-8.5-9-8.5z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7.5" r="1"/><circle cx="15" cy="8" r="1"/></symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="m14 5-7 7 7 7M7 12h14"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
+    <symbol id="i-list-ordered" viewBox="0 0 24 24"><path d="M10 6h10M10 12h10M10 18h10M4 5h1v3M4 11h2l-2 3h2M4 17h2l-2 3h2"/></symbol>
+    <symbol id="i-check-square" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="m8 12 2.5 2.5L16 9"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.5"/></symbol>
+    <symbol id="i-restore" viewBox="0 0 24 24"><path d="M4 11a8 8 0 1 1 2 5.3M4 4v7h7"/><path d="M12 8v4l3 2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+  </svg>
+  <script src="app.js" defer></script>
+</body>
+</html>
